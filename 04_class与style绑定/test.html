@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>04_class与style绑定</title>
+  <style>
+    .classA {
+      color: red;
+    }
+    .classB {
+      background: blue;
+    }
+    .classC {
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<!--
+1. 理解
+  在应用界面中, 某个(些)元素的样式是变化的
+  class/style绑定就是专门用来实现动态样式效果的技术
+2. class绑定: :class='xxx'
+  xxx是字符串
+  xxx是对象
+  xxx是数组
+3. style绑定
+  :style="{ color: activeColor, fontSize: fontSize + 'px' }"
+  其中activeColor/fontSize是data属性
+-->
+
+<div id="demo">
+  <h2>1. class绑定: :class='xxx'</h2>
+  <p :class="myClass">旺旺是猪</p>
+  <p :class="{classA:hasA,classB:hasB}">爱爱是大美女</p>
+  <p :class=['classA','classB']>燕燕也是大美女</p>
+  <h2>2. style绑定</h2>
+  <p :style="{color,fontSize:size+'px'}">娟娟更是大美女</p>
+  <button @click="update">切换</button>
+</div>
+
+<script type="text/javascript" src="../vue.js"></script>
+<script type="text/javascript">
+const vm=new Vue({
+    data (){
+      return {
+        myClass:'classA',
+        hasA:false,
+        hasB:true,
+        color:'yellow',
+        size:30
+      }
+    },
+    methods: {
+      update(){
+        this.myClass='classB'
+        this.hasA=!this.hasA
+        this.hasB=!this.hasB
+        this.color='deeppink'
+        this.size=50
+      }
+    }
+  })
+  vm.$mount('#demo')
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>06_列表渲染</title>
+</head>
+<body>
+
+<!--
+1. 列表显示
+  数组: v-for / index
+  对象: v-for / key
+2. 列表的更新显示
+  删除item
+  替换item
+-->
+
+<div id="demo">
+  <h2>测试: v-for 遍历数组</h2>
+  <ul>
+    <li v-for="(p,index) in persons" :key="p.id">
+      {{index}}-------{{p.id}}-------{{p.name}}-------{{p.age}}
+      <button @click="deleteP(index)">删除</button>
+      <button @click="updateP(index,{id:Date.now(),name:'娘娘',age:18})">更新</button>
+    </li>
+  </ul>
+  <h2>测试: v-for 遍历对象</h2>
+  <ul>
+    <li v-for="(value, key) in persons[1]" :key="key">
+      {{key}}:{{value}}
+    </li>
+  </ul>
+</div>
+
+<script type="text/javascript" src="../vue.js"></script>
+<script type="text/javascript">
+new Vue({
+  el:'#demo',
+  data:{
+    persons:[
+      {id:1,name:'小花',age:19},
+      {id:2,name:'爱爱',age:13},
+      {id:5,name:'燕燕',age:27},
+      {id:9,name:'旺旺',age:24},
+      {id:3,name:'串串',age:48},
+    ]
+  },
+  methods: {
+    deleteP(index){
+     this.persons.splice(index,1)
+    },
+    updateP(index,newP){
+      //此种方式更新数组中的内容是错误的，因为对于data对象中的所有层次的属性都有对应的set监听（数组除外）
+      //如果data对象中的某一属性的属性值是数组vue做了如下处理：
+      //重写数组中更新的方法，这一方法的实现是调用原本的方法来更新数组，数组一旦更新就进行界面的更新，
+      //也就是说vue底层在实例的原型上又加了一个上层，当我们调用数组的方法的时候先找到vue底层封装好的数组然后再去找数组原型上的方法
+      //因此我们要想通过更新数组来达到更新界面的方法，需要调用数组的方法，而不是直接修改下标
+      //this.persons[index]=newP
+      //第二种写法
+      //this.persons.splice(index,1,newP)
+      //第三种写法(这种写法是因为如果我们按照第一种错误的写法实现，此时data的set监听只能监听到persons属性永远是数组，
+      //检测不到内部的更改但是现在将p这个对象单独拿出来操作，data对于对象的所有层次都能检测的到)
+      const p=this.persons[index]
+      p.id=newP.id
+      p.name=newP.name
+      p.age=newP.age
+    }
+  },
+})
+</script>
+</body>
+</html>
